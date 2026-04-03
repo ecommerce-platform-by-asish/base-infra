@@ -9,15 +9,12 @@ services:
 #    volumes:
 #      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports: [ "5432:5432" ]
-    attach: false
   redis:
     image: redis:7-alpine
     ports: [ "6379:6379" ]
-    attach: false
   kafka:
     image: confluentinc/cp-kafka:7.5.0
     ports: [ "9092:9092" ]
-    attach: false
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: 'broker,controller'
@@ -33,4 +30,3 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
     environment: { discovery.type: single-node, xpack.security.enabled: "false" }
     ports: [ "9200:9200" ]
-    attach: false
