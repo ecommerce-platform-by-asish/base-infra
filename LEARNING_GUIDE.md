@@ -17,9 +17,9 @@ A step-by-step action plan to build the entire eCommerce Microservices platform.
 **Tech:** Java 25, Spring Boot 4.0, MapStruct, Lombok, JPA/PostgreSQL.
 
 **Action Items:**
-- [x] Implement robust RESTful CRUD endpoints for Products.
-- [x] Use `MapStruct` with `@Mapper(componentModel = "spring")` to eliminate manual data class mapping.
-- [x] Connect to PostgreSQL on port `5432`.
+- [ ] Implement robust RESTful CRUD endpoints for Products.
+- [ ] Use `MapStruct` with `@Mapper(componentModel = "spring")` to eliminate manual data class mapping.
+- [ ] Connect to PostgreSQL on port `5432`.
 
 ---
 
