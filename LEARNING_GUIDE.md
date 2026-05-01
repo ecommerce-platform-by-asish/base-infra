@@ -107,6 +107,28 @@ A step-by-step action plan to build the entire eCommerce Microservices platform.
 
 ---
 
+## ⭐ Phase 10 — Service Discovery (Eureka)
+**Goal:** Implement dynamic service registration and discovery to eliminate hardcoded URLs.
+**Tech:** Spring Cloud Netflix Eureka.
+
+**Action Items:**
+- [ ] Create **Discovery Server** on Port `8761`.
+- [ ] Register all microservices as Eureka Clients.
+- [ ] Update API Gateway to use `lb://SERVICE-NAME` for dynamic routing instead of static `localhost` URLs.
+
+---
+
+## ⭐ Phase 11 — Centralized Logging & Observability
+**Goal:** Aggregate logs and traces across all services for easier debugging.
+**Tech:** ELK Stack (Elasticsearch, Logstash, Kibana) or Loki/Promtail.
+
+**Action Items:**
+- [ ] Implement **Distributed Tracing** using Micrometer Tracing and Zipkin to propagate `traceId` across services.
+- [ ] Set up a centralized logging collector (e.g., Logstash or Promtail) to ship logs to a central store.
+- [ ] Create a Kibana or Grafana dashboard to visualize logs and trace spans.
+
+---
+
 ## 🧭 Project Ports Quick-Reference
 
 | Service         | Port | Service         | Port |
@@ -116,3 +138,4 @@ A step-by-step action plan to build the entire eCommerce Microservices platform.
 | Product Service | 8081 | Redis           | 6379 |
 | Cart Service    | 8082 | Kafka           | 9092 |
 | Order Service   | 8083 | Elasticsearch   | 9200 |
+| Discovery Srv   | 8761 |                 |      |

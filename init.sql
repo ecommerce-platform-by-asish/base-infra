@@ -5,3 +5,4 @@ CREATE DATABASE inventory_db;
 CREATE DATABASE payment_db;
 CREATE DATABASE shipping_db;
 CREATE DATABASE review_db;
+CREATE DATABASE cart_db;
