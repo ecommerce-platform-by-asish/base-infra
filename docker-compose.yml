@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   postgres:
-    image: postgres:15-alpine
+    image: postgres:latest
     environment:
       POSTGRES_USER: ecommerce
       POSTGRES_PASSWORD: admin
@@ -10,10 +10,10 @@ services:
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports: [ "5432:5432" ]
   redis:
-    image: redis:7-alpine
+    image: redis:latest
     ports: [ "6379:6379" ]
   kafka:
-    image: apache/kafka:3.8.0
+    image: apache/kafka:latest
     container_name: kafka
     ports:
       - "9092:9092"
@@ -32,6 +32,6 @@ services:
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
       KAFKA_NUM_PARTITIONS: 3
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:latest
     environment: { discovery.type: single-node, xpack.security.enabled: "false" }
     ports: [ "9200:9200" ]
