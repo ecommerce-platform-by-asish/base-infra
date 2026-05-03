@@ -17,9 +17,9 @@ A step-by-step action plan to build the entire eCommerce Microservices platform.
 **Tech:** Java 25, Spring Boot 4.0, MapStruct, Lombok, JPA/PostgreSQL.
 
 **Action Items:**
-- [ ] Implement robust RESTful CRUD endpoints for Products.
-- [ ] Use `MapStruct` with `@Mapper(componentModel = "spring")` to eliminate manual data class mapping.
-- [ ] Connect to PostgreSQL on port `5432`.
+- [x] Implement robust RESTful CRUD endpoints for Products.
+- [x] Use `MapStruct` with `@Mapper(componentModel = "spring")` to eliminate manual data class mapping.
+- [x] Connect to PostgreSQL on port `5432`.
 
 ---
 
@@ -28,9 +28,9 @@ A step-by-step action plan to build the entire eCommerce Microservices platform.
 **Tech:** Redis Hash (`HSET`), Cache-Aside Pattern.
 
 **Action Items:**
-- [ ] Update Product Service to cache responses in Redis. Implement **Cache-Aside Invalidation** (evict cache on updates).
-- [ ] Create **Cart Service** on Port `8082`.
-- [ ] Store entire shopping carts exclusively in Redis using `HSET` (No PostgreSQL).
+- [x] Update Product Service to cache responses in Redis. Implement **Cache-Aside Invalidation** (evict cache on updates).
+- [x] Create **Cart Service** on Port `8083`.
+- [x] Store shopping carts persistently in PostgreSQL, but cache active sessions in Redis for fast read access.
 
 ---
 
@@ -39,9 +39,9 @@ A step-by-step action plan to build the entire eCommerce Microservices platform.
 **Tech:** JWT (RS256 asymmetric signing), Spring Cloud Gateway, Rate Limiting.
 
 **Action Items:**
-- [ ] Create **Auth Service** on Port `8080`. Implement JWT issuance via Async RSA Keys.
-- [ ] Create **API Gateway** on Port `8000` to route traffic.
-- [ ] Gateway verifies JWTs locally via Public Key and passes the extracted `X-User-Id` header to downstream services.
+- [x] Create **Auth Service** on Port `8081`. Implement JWT issuance via Async RSA Keys.
+- [x] Create **API Gateway** on Port `8080` to route traffic.
+- [x] Gateway verifies JWTs locally via Public Key and passes the extracted `X-User-Id` header to downstream services.
 
 ---
 
@@ -71,9 +71,9 @@ A step-by-step action plan to build the entire eCommerce Microservices platform.
 **Tech:** Kafka Topics, Saga Pattern (State Machine).
 
 **Action Items:**
-- [ ] Create **Order Service** on Port `8083` with PostgreSQL for state tracking (PENDING -> RESERVED -> PAID).
+- [ ] Create **Order Service** on Port `8085` with PostgreSQL for state tracking (PENDING -> RESERVED -> PAID).
 - [ ] Publish `ecommerce.orders.requested` to Kafka when a cart is checked out.
-- [ ] Create **Inventory Service** (Port `8084`) that listens for the event and attempts to logically reserve stock.
+- [ ] Create **Inventory Service** (Port `8086`) that listens for the event and attempts to logically reserve stock.
 
 ---
 
@@ -102,7 +102,7 @@ A step-by-step action plan to build the entire eCommerce Microservices platform.
 **Tech:** Elasticsearch, Change Data Capture (CDC).
 
 **Action Items:**
-- [ ] Create **Search Service** on Port `8085`.
+- [ ] Create **Search Service** on Port `8087`.
 - [ ] Subscribe to the `PRODUCT_UPDATED_EVT` Kafka topic to immediately update the Elasticsearch index, keeping search in sync with PostgreSQL.
 
 ---
@@ -133,9 +133,11 @@ A step-by-step action plan to build the entire eCommerce Microservices platform.
 
 | Service         | Port | Service         | Port |
 |-----------------|------|-----------------|------|
-| API Gateway     | 8000 | Pricing (gRPC)  | 9090 |
-| Auth Service    | 8080 | PostgreSQL      | 5432 |
-| Product Service | 8081 | Redis           | 6379 |
-| Cart Service    | 8082 | Kafka           | 9092 |
-| Order Service   | 8083 | Elasticsearch   | 9200 |
-| Discovery Srv   | 8761 |                 |      |
+| API Gateway     | 8080 | Pricing (gRPC)  | 9090 |
+| Auth Service    | 8081 | PostgreSQL      | 5432 |
+| Product Service | 8082 | Redis           | 6379 |
+| Cart Service    | 8083 | Kafka           | 9092 |
+| Pricing (HTTP)  | 8084 | Elasticsearch   | 9200 |
+| Order Service   | 8085 | Discovery Srv   | 8761 |
+| Inventory Srv   | 8086 |                 |      |
+| Search Service  | 8087 |                 |      |

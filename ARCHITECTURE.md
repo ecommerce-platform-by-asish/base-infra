@@ -16,22 +16,22 @@
                                               ▼
                              🛡️ API GATEWAY (Spring Cloud)                                      👤 Auth Service
                     ┌────────────────────────────────────────────────┐                    ┌────────────────────────┐
-                    │ Pattern: Rate Limit, Circuit, API Composition  │──🌐 REST (:8080)──▶│ Pattern : ID Provider  │
+                    │ Pattern: Rate Limit, Circuit, API Composition  │──🌐 REST (:8081)──▶│ Pattern : ID Provider  │
                     │ Storage: Redis (Token Bucket & Session Cache)  │                    │ Storage : PGSQL (ACID) │
                     │ Purpose: Central Routing & Edge JWT Validation │                    │ Purpose : Issue Tokens │
                     └────────┬───────────────────────────────┬───────┘                    └────────────────────────┘
                              │                               │
-                      🌐 REST (:8081)                 🌐 REST (:8082)
+                      🌐 REST (:8082)                 🌐 REST (:8083)
                              ▼                               ▼
                    📦 Product Service                    🛒 Cart Service                            🏷️ Pricing Service 
                  ┌────────────────────────┐          ┌────────────────────────┐                  ┌────────────────────────┐
-                 │ Pattern : CQRS & Cache │          │ Pattern : Ephemeral KV │──⚡ gRPC (:9090)─▶│ Pattern : Service/RPC  │
-                 │ Storage : PGSQL+Redis  │          │ Storage : Redis (Hash) │                  │ Storage : In-Memory    │
+                 │ Pattern : CQRS & Cache │          │ Pattern : Persistent   │──⚡ gRPC (:9090)─▶│ Pattern : Service/RPC  │
+                 │ Storage : PGSQL+Redis  │          │ Storage : PGSQL+Redis  │                  │ Storage : In-Memory    │
                  │ Purpose : Product CRUD │          │ Purpose : Manage Carts │                  │ Purpose : Batch Prices │
                  └───────────┬────────────┘          └───────────┬────────────┘                  └────────────────────────┘
                              │                                   │  ORDER_REQUESTED
                ┌─────────────┘                                   │
-          🔄 CDC (:8089)                            📨 Kafka (orders.requested)
+          🔄 CDC (:8087)                            📨 Kafka (orders.requested)
                ▼                                                 ▼
        🔍 Search Service                         ⚙️ Order Orchestrator (Saga)
      ┌────────────────────────┐           ┌──────────────────────────────────────────────┐
@@ -134,7 +134,7 @@ On timeout → watchdog triggers compensation after 15 min
 | Use Case | Service | Key Pattern |
 |---|---|---|
 | Product cache | Product Service | `product:{id}` (1hr TTL) |
-| Cart storage | Cart Service | `HSET cart:{userId} {productId} {qty}` |
+| Cart storage | Cart Service | `cart:{userId}` (Active session cache) |
 | Rate limiting | API Gateway | Token bucket per IP |
 | JWT blacklist | API Gateway *(planned)* | `jwt:blacklist:{jti}` |
 | Distributed lock | Inventory *(planned)* | `lock:inventory:{itemId} NX EX 5` |
@@ -176,7 +176,7 @@ ecommerce.search.product-sync       # CDC from Debezium → Search
 | **Outbox Pattern** | Business write + event in one DB transaction — no message loss. |
 | **CQRS** | PostgreSQL for writes (normalised), Redis/Elasticsearch for reads (fast). |
 | **Event Sourcing (Orders)** | Order changes are immutable events — full audit trail, replayable. |
-| **Redis Cart** | Cart is ephemeral. Hash structure gives O(1) add/remove per item. |
+| **Persistent Cart** | Cart is stored in PostgreSQL for longevity, but cached in Redis for fast access. |
 | **Stateless Gateway** | JWT validated by public key — Gateway never calls Auth Service. |
 
 ---
